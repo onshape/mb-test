@@ -3,6 +3,6 @@
 stage 'ONE'
 node('master') {
   checkout scm
-  echo env.BRANCH
+  echo env.BRANCH_NAME
   sh 'cat Jenkinsfile'
 }
