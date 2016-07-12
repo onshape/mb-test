@@ -10,4 +10,4 @@ node('master') {
   archive includes: 'file1'
 }
 
-build 'api-created'
+build job: 'promote-to-s3/api-created', parameters: [[$class: 'StringParameterValue', name: 'BRANCH_NAME', value: env.BRANCH_NAME]]
