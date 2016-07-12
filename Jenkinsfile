@@ -9,3 +9,5 @@ node('master') {
   sh 'stat file1'
   archive includes: 'file1'
 }
+
+build 'api-created'
