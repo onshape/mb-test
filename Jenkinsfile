@@ -6,6 +6,8 @@ node('master') {
   for (p in env) {
     echo "${p.key}=${p.value}"
   }
+  echo env.BRANCH_NAME
+  echo env.GIT_COMMIT
   echo pwd()
   sh 'cat Jenkinsfile'
   sh 'stat file1'
