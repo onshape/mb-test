@@ -11,7 +11,7 @@ node('master') {
   echo pwd()
   sh 'stat file1'
   archive includes: 'file1'
-  def lsb = currentBuild.rawbuild.project.lastSuccessfulBuild
+  def lsb = currentBuild.rawBuild.project.lastSuccessfulBuild
   def lsbNumber = lsb.number.toString()
   def gitData = lsb.actions.find { it instanceof hudson.plugins.git.util.BuildData }
   def lsbSha = gitData.lastBuiltRevision.sha1String
