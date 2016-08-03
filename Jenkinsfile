@@ -9,9 +9,12 @@ node('master') {
   echo env.BRANCH_NAME
   echo env.GIT_COMMIT
   echo pwd()
-  sh 'cat Jenkinsfile'
   sh 'stat file1'
   archive includes: 'file1'
+  def lsb = currentBuild.rawbuild.project.lastSuccessfulBuild
+  def lsbNumber = lsb.number.toString()
+  def gitData = lsb.actions.find { it instanceof hudson.plugins.git.util.BuildData }
+  def lsbSha = gitData.lastBuiltRevision.sha1String
+  echo lsbSha
 }
 
-build job: 'promote-to-s3/api-created', parameters: [[$class: 'StringParameterValue', name: 'BRANCH_NAME', value: env.BRANCH_NAME]], quietPeriod: 0
