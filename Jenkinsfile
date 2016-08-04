@@ -29,7 +29,7 @@ node('master') {
   }
 }
 
-@NonCps
+@NonCPS
 def getBuildSha(b) {
   def sha = b.getAction(jenkins.scm.api.SCMRevisionAction).revision.hash
   return sha
