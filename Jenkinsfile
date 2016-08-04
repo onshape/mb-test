@@ -15,7 +15,7 @@ node('master') {
   step LIB.allowClaim()
 
   def lsb = LIB.getBranchLsb(env.BRANCH_NAME)
-  def LSB_NUMBER = lsb.number.toString()
+  LSB_NUMBER = lsb.number.toString()
 
   def lsbSha = LIB.getBuildSha(lsb)
   lsb = null
