@@ -17,7 +17,7 @@ node('master') {
   def lsbNumber = lsb.number.toString()
   binding.setVariable('LSB_NUMBER', lsbNumber)
 
-  def lsbSha = getBuildSha(lsb)
+  def lsbSha = lib.getBuildSha(lsb)
   lsb = null
 
   currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${lsbNumber} ${lsbSha}"
@@ -29,14 +29,10 @@ node('master') {
     }
   }
   if (mustRun) {
-    sh bashCommand()
+    lib.mailOnError sh: bashCommand()
   }
 }
 
-def getBuildSha(b) {
-  def sha = b.getAction(jenkins.scm.api.SCMRevisionAction).revision.hash
-  return sha
-}
 // archive 
 //   archive includes: 'file1'
 // **/*.log,stage/fileretrieval/**/*

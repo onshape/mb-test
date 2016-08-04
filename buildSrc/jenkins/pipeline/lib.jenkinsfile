@@ -20,6 +20,15 @@ def allowClaim() {
   [$class: 'ClaimPublisher']
 }
 
+def getBuildSha(b) {
+  def sha = b.getAction(jenkins.scm.api.SCMRevisionAction).revision.hash
+  return sha
+}
+
+def defaultMailTo() {
+  'philip.kania@onshape.com'
+}
+
 // def defaultMailTo() {
 //   'newton-build-watchers@onshape.com'
 // }
@@ -248,48 +257,53 @@ def allowClaim() {
 //   error "${name} FAILED"
 // }
 
-// def mailOnError(params) {
-//   def savedErrors = []
-//   try {
-//     if (params.scm) {
-//       // call the scm closure
-//       (params.scm)()
-//     } else {
-//       checkout scm
-//     }
+def handleErrors(name, errors) {
+  mail subject:'failed', body:'failed', to:defaultMailTo(), mimeType:'text/html'
+  error "${name} FAILED"
+}
+
+def mailOnError(params) {
+  def savedErrors = []
+  try {
+    if (params.scm) {
+      // call the scm closure
+      (params.scm)()
+    } else {
+      checkout scm
+    }
 //     withEnv(EXTRA_ENV) {
-//       if (params.timeout) {
-//         timeout(params.timeout) {
-//           sh params.sh
-//         }
-//       } else {
-//         sh params.sh
-//       }
+      if (params.timeout) {
+        timeout(params.timeout) {
+          sh params.sh
+        }
+      } else {
+        sh params.sh
+      }
 //     }
-//   }
-//   catch (err) {
-//     savedErrors << err
-//   }
-//   finally {
-//     if (params.archive) {
-//       // archive step does not throw an exception
-//       archive params.archive
-//     }
-//     // junitResults does throw an exception
-//     try {
-//       if (params.junit) {
-//         step(params.junit)
-//       }
-//     }
-//     catch (err) {
-//       savedErrors << err
-//     }
-//     finally {
-//       if (savedErrors) {
-//         handleErrors(params.name, savedErrors)
-//       }
-//     }
-//   }
-// }
+  }
+  catch (err) {
+    savedErrors << err
+  }
+  finally {
+    if (params.archive) {
+      // archive step does not throw an exception
+      archive params.archive
+    }
+    // junitResults does throw an exception
+    try {
+      if (params.junit) {
+        step(params.junit)
+      }
+    }
+    catch (err) {
+      savedErrors << err
+    }
+    finally {
+      if (savedErrors) {
+        handleErrors(params.name, savedErrors)
+      }
+    }
+  }
+}
 
 return this
