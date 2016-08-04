@@ -20,6 +20,12 @@ def allowClaim() {
   [$class: 'ClaimPublisher']
 }
 
+def getBranchLsb(branch) {
+//   def lsb = Jenkins.instance.getItem('newton').getItem(branch).lastSuccessfulBuild
+  def lsb = Jenkins.instance.getItem('newton-osx').getItem(branch).lastSuccessfulBuild
+  return lsb
+}
+
 def getBuildSha(b) {
   def sha = b.getAction(jenkins.scm.api.SCMRevisionAction).revision.hash
   return sha

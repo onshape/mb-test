@@ -1,36 +1,35 @@
 #!groovy
 
 // Global variables
-binding.setVariable('ALLOW_CLAIM', [$class: 'ClaimPublisher'])
+def LIB
+def LSB_NUMBER
+
 currentBuild.rawBuild.project.description = description()
 
-def lib
 stage name: 'TEST', concurrency: 1
 //node('osx-bigmac-slave') {
 node('master') {
   checkout scm
 
-  lib = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
-  step lib.allowClaim()
+  LIB = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
+  step LIB.allowClaim()
 
-//   def lsb = Jenkins.instance.getItem('newton').getItem(env.BRANCH_NAME).lastSuccessfulBuild
-  def lsb = Jenkins.instance.getItem('newton-osx').getItem(env.BRANCH_NAME).lastSuccessfulBuild
-  def lsbNumber = lsb.number.toString()
-  binding.setVariable('LSB_NUMBER', lsbNumber)
+  def lsb = LIB.getBranchLsb(env.BRANCH_NAME)
+  def LSB_NUMBER = lsb.number.toString()
 
-  def lsbSha = lib.getBuildSha(lsb)
+  def lsbSha = LIB.getBuildSha(lsb)
   lsb = null
 
-  currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${lsbNumber} ${lsbSha}"
+  currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${LSB_NUMBER} ${lsbSha}"
   def mustRun = true
   for (b in currentBuild.rawBuild.project.builds) {
-    if ((lib.getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
+    if ((LIB.getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
       currentBuild.rawBuild.description += ' already passed'
       mustRun = false
     }
   }
   if (mustRun) {
-    lib.mailOnError sh: bashCommand(), archive: [includes: '**/*.log,stage/fileretrieval/**/*'], junit: lib.junitResults('stage/**/test-results/*.xml')
+    LIB.mailOnError name: 'long-upgraded-retrieval-test', sh: bashCommand(), archive: [includes: '**/*.log,stage/fileretrieval/**/*'], junit: LIB.junitResults('stage/**/test-results/*.xml')
   }
 }
 
