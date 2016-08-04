@@ -15,9 +15,10 @@ node('master') {
 
   def lsb = LIB.getBranchLsb(env.BRANCH_NAME)
   // Global variable does not work inside string interpolation, use binding instead.
-  binding.setVariable('LSB_NUMBER'), lsb.number.toString())
+  binding.setVariable('LSB_NUMBER', lsb.number.toString())
 
   def lsbSha = LIB.getBuildSha(lsb)
+  // to avoid serialization error
   lsb = null
 
   currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${LSB_NUMBER} ${lsbSha}"
