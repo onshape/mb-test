@@ -87,11 +87,11 @@ def defaultMailTo() {
 //   // RejectedAccessException: Scripts not permitted to use method hudson.model.AbstractItem
 // }
 
-// def junitResults(pattern) {
-//   // The ClaimTestDataPublisher causes jenkins to hang.
-// //   return [$class: 'JUnitResultArchiver', testDataPublishers: [[$class: 'ClaimTestDataPublisher']], testResults: pattern]
-//   return [$class: 'JUnitResultArchiver', testResults: pattern]
-// }
+def junitResults(pattern) {
+  // The ClaimTestDataPublisher causes jenkins to hang.
+//   return [$class: 'JUnitResultArchiver', testDataPublishers: [[$class: 'ClaimTestDataPublisher']], testResults: pattern]
+  return [$class: 'JUnitResultArchiver', testResults: pattern]
+}
 
 // def retentionPolicy(numToKeep = 5) {
 //   return [$class: 'BuildDiscarderProperty',

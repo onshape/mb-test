@@ -29,18 +29,9 @@ node('master') {
     }
   }
   if (mustRun) {
-    lib.mailOnError sh: bashCommand()
+    lib.mailOnError sh: bashCommand(), archive: [includes: '**/*.log,stage/fileretrieval/**/*'], junit: lib.junitResults('stage/**/test-results/*.xml')
   }
 }
-
-// archive 
-//   archive includes: 'file1'
-// **/*.log,stage/fileretrieval/**/*
-
-// junit
-// stage/**/test-results/*.xml
-
-// allow claim
 
 def description() {
   """
