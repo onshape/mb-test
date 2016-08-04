@@ -23,7 +23,7 @@ node('master') {
   currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${lsbNumber} ${lsbSha}"
   def mustRun = true
   for (b in currentBuild.rawBuild.project.builds) {
-    if ((getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
+    if ((lib.getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
       currentBuild.rawBuild.description += ' already passed'
       mustRun = false
     }
