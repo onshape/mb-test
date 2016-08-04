@@ -21,7 +21,7 @@ node('master') {
   currentBuild.rawBuild.description = "newton-master build ${lsbNumber} ${lsbSha}"
   def mustRun = true
   for (b in currentBuild.rawBuild.project.builds) {
-    if ((b.buildVariables.LSB_SHA == bv.lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
+    if ((getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
       currentBuild.rawBuild.description += ' already passed'
       mustRun = false
     }
@@ -31,6 +31,11 @@ node('master') {
   }
 }
 
+def getBuildSha(b) {
+  def sha = b.getAction(jenkins.scm.api.SCMRevisionAction).revision.hash
+  echo sha
+  return sha
+}
 // archive 
 //   archive includes: 'file1'
 // **/*.log,stage/fileretrieval/**/*
