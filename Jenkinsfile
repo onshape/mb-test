@@ -5,7 +5,8 @@ binding.setVariable('ALLOW_CLAIM', [$class: 'ClaimPublisher'])
 currentBuild.rawBuild.project.description = description()
 
 stage name: 'TEST', concurrency: 1
-node('osx-bigmac-slave') {
+//node('osx-bigmac-slave') {
+node('master') {
   checkout scm
 
   def lsb = currentBuild.rawBuild.project.lastSuccessfulBuild
