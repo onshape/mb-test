@@ -1,0 +1,295 @@
+#!groovy
+
+import groovy.text.SimpleTemplateEngine
+
+import hudson.model.ParametersAction
+import hudson.model.Result
+import hudson.tasks.Mailer
+
+import jenkins.model.Jenkins
+import jenkins.scm.api.SCMRevisionAction
+import hudson.plugins.git.util.BuildData
+
+import java.math.BigDecimal
+import java.math.RoundingMode
+
+import org.eclipse.jgit.lib.ObjectId
+
+// Global variables
+def allowClaim() {
+  [$class: 'ClaimPublisher']
+}
+
+// def defaultMailTo() {
+//   'newton-build-watchers@onshape.com'
+// }
+
+// def getBuildChangeSetReport(build) {
+//   def engine = new SimpleTemplateEngine()
+
+//   // pipleline returns a list with multiple copies of the same GitChangeSetList, so just use the first one.
+//   def changeSets = build.changeSets[0]
+
+//   def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change.commitId}\'><code>${change.commitId}</code></a></td><td><code>${new Date(change.timestamp).toGMTString()}</code></td><td>${change.author.fullName}</td><td>${change.msg}</td></tr>" } %>'
+//   def report = engine.createTemplate(template).make([changeSets:changeSets]).toString()
+//   return report
+// }
+
+// def getFolder(folderName) {
+//   def folder = Jenkins.instance.getItem(folderName)
+//   if (!folder) {
+//     echo "Creating folder ${folderName}"
+//     folder = Jenkins.instance.createProject(com.cloudbees.hudson.plugins.folder.Folder.class, folderName)
+//   }
+//   return folder
+// }
+
+// def getProject(folder) {
+//   def project = folder.getItem(env.BRANCH_NAME)
+//   if (!project) {
+//     echo "Creating folder ${folder.name}/${env.BRANCH_NAME}"
+//     project = folder.createProject(org.jenkinsci.plugins.workflow.job.WorkflowJob.class, env.BRANCH_NAME)
+//   }
+//   return project
+// }
+
+// def updateProject(params) {
+//   def project = params.project
+//   def bucket = params.bucket
+//   def deployTo = params.deployTo
+
+//   def templateFile = "buildSrc/jenkins/pipeline/templates/${project}.jenkinsfile"
+//   def template = readFile(templateFile)
+
+//   def engine = new SimpleTemplateEngine()
+//   // Avoid using bindings until script approval issues can be addressed.
+//   def templateBindings = [:]
+//   def script = engine.createTemplate(template).make(templateBindings).toString()
+
+//   def folder = getFolder(project)
+//   def projectInstance = getProject(folder)
+//   if (projectInstance.definition?.script != script) {
+//     echo "Setting definiton for ${project}/${env.BRANCH_NAME}"
+//     // Would like to enable sandbox so these scripts could inherit previous method approvals but...
+//     // RejectedAccessException: Scripts not permitted to use new org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition java.lang.String boolean
+//     projectInstance.definition = new org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition(script)
+//   }
+//   // Would also like to set description but...
+//   // RejectedAccessException: Scripts not permitted to use method hudson.model.AbstractItem
+// }
+
+// def junitResults(pattern) {
+//   // The ClaimTestDataPublisher causes jenkins to hang.
+// //   return [$class: 'JUnitResultArchiver', testDataPublishers: [[$class: 'ClaimTestDataPublisher']], testResults: pattern]
+//   return [$class: 'JUnitResultArchiver', testResults: pattern]
+// }
+
+// def retentionPolicy(numToKeep = 5) {
+//   return [$class: 'BuildDiscarderProperty',
+//           strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: numToKeep.toString()]]
+// }
+
+// def slackNotificationPolicy() {
+//   return [$class: 'SlackJobProperty',
+// //           room: '#builds',
+//           room: '@pkania',
+//           startNotification: false,
+//           notifyAborted: false,
+//           notifyFailure: true,
+//           notifyNotBuilt: false,
+//           notifySuccess: false,
+//           notifyUnstable: true,
+//           notifyBackToNormal: false,
+//           notifyRepeatedFailure: false,
+//           includeTestSummary: false,
+//           showCommitList: false
+//          ]
+// }
+
+// // Determine the culprits and set global variables. This approach is required to work around CPS limitations
+// // getCulprits on build currently not supported.
+// def updateCulprits() {
+//   def committers = [] as Set
+//   for (b in currentBuild.rawBuild.project.builds) {
+//     if (b.result == Result.SUCCESS) {
+//       // pipleline returns a list with multiple copies of the same GitChangeSetList, so just use the first one.
+//       // the order of the commits seems arbitrary, don't use this
+// //       binding.setVariable('LSB_COMMIT', b.changeSets[0].first().id)
+//       break;
+//     }
+//     for (csl in b.changeSets) {
+//       for (cs in csl) {
+//         committers.add(cs.committer)
+//       }
+//     }
+//   }
+//   def culprits = []
+//   for (id in committers) {
+//     def address = Jenkins.instance.getUser(id).getProperty(Mailer.UserProperty).getAddress()
+//     culprits << [id:id, address:address]
+//   }
+//   // workaround CPS limitations
+//   def onshapeAddresses = []
+//   def otherAddresses = []
+//   for (c in culprits) {
+//     if (c.address.endsWith('@onshape.com')) {
+//       onshapeAddresses << c.address
+//     } else {
+//       otherAddresses << c.address
+//     }
+//   }
+//   binding.setVariable('CULPRITS_JSON', groovy.json.JsonOutput.toJson(culprits))
+//   binding.setVariable('CULPRITS_ADDRESSES', onshapeAddresses.join(','))
+//   binding.setVariable('OTHER_ADDRESSES', otherAddresses.join('<br/>'))
+// }
+
+// // Get the commit of the last successful build.
+// def getLsbCommit() {
+//   // If there is no previous sucessful build just return the commit of this build so we don't have
+//   // long lists of culprits and changesets.
+//   // org.eclipse.jgit.lib.ObjectId.toString(Jenkins.instance.getItem('newton').getItem('pkania-pipeline').getBuild('81').getAction(hudson.plugins.git.util.BuildData).lastBuild.revision.sha1)
+//   // RejectedAccessException: Scripts not permitted to use method jenkins.scm.api.SCMRevisionAction getRevision
+// //   return currentBuild.rawBuild.project.lastSuccessfulBuild?.getAction(SCMRevisionAction)?.revision?.hash ?: GIT_COMMIT
+// //   def sha1 = currentBuild.rawBuild.project.lastSuccessfulBuild?.getAction(BuildData)?.lastBuild?.revision?.sha1
+// //   return sha1 ? ObjectId.toString(sha1) : GIT_COMMIT
+// //   return LSB_COMMIT
+// }
+
+// // Get the average duration of successful builds.
+// def getLsbDuration() {
+// // RejectedAccessException: Scripts not permitted to use method hudson.model.Run getDuration or getEstimatedDuration
+// //   def total = new BigDecimal(0)
+// //   def count = new BigDecimal(0)
+// //   for (b in currentBuild.rawBuild.project.builds) {
+// //     if (b.result == Result.SUCCESS) {
+// //       ++count
+// //       total += b.duration
+// //     }
+// //   }
+// //   def duration = count > 0 ? total.divide(count, 0, RoundingMode.HALF_UP): ''
+// //   return duration
+//   return currentBuild.rawBuild.estimatedDuration
+// }
+
+// def getBuildFailedSubject(name) {
+//   def subject = "${currentBuild.rawBuild.project.fullDisplayName} ${name} Build #${currentBuild.number} - FAILED!"
+//   if (binding.hasVariable('GIT_COMMIT')) {
+//     return subject + " git commit ${GIT_COMMIT}"
+//   } else {
+//     return subject
+//   }
+// }
+
+// def getBuildFailedBody(name, errors) {
+//   def body = "<p>${getBuildFailedSubject(name)}</p>"
+//   if (binding.hasVariable('BUILD_URL')) {
+//     body += "<p>Click build <a href='${BUILD_URL}/flowGraphTable'>steps</a> to view the build logs.</p>"
+//   }
+//   body +=
+// """
+// <hr/>
+// <p>
+// Changes since the previous successful build:
+// </p>
+// <table>
+// """
+//   for (b in currentBuild.rawBuild.project.builds) {
+//     if (b.result == Result.SUCCESS) {
+//       break;
+//     }
+//     body += getBuildChangeSetReport(b)
+//   }
+//   body += '</table>' + getErrorReport(errors) + getTestResultsReport(currentBuild.rawBuild)
+//   return body
+// }
+
+// def getErrorReport(errors) {
+//   def results = '<hr/><p>Exceptions:</p><table>'
+//   for (error in errors) {
+//     echo error.toString()
+//     results += "<tr><td>${error}</td></tr>"
+//   }
+//   results += '</table>'
+//   return results
+// }
+
+// def getTestResultsReport(build) {
+//   def action = build.getAction(hudson.tasks.junit.TestResultAction)
+//   if (!action) {
+//     return ''
+//   }
+//   def results = """
+// <hr/>
+// <p>Test Results</p>
+// <table>
+// <tr><td>failed<td></td>${action.failCount}</td></tr>
+// <tr><td>skipped<td></td>${action.failCount}</td></tr>
+// <tr><td>total<td></td>${action.failCount}</td></tr>
+// </table>
+// """
+//   if (action.failCount != 0) {
+//     for (failed in action.result.failedTests) {
+//       results += "<pre>${failed.dump()}</pre>"
+//     }
+//   }
+//   return results
+// }
+
+// def getBuildFixedSubject() {
+//   return "${currentBuild.rawBuild.project.fullDisplayName} Build #${currentBuild.number} - FIXED! git commit ${GIT_COMMIT}"
+// }
+
+// def getBuildFixedBody() {
+//   return "${currentBuild.rawBuild.project.fullDisplayName} Build #${currentBuild.number} - FIXED! git commit <a href='https://github.com/onshape/newton/commit/${GIT_COMMIT}'>${GIT_COMMIT}</a>"
+// }
+
+// def handleErrors(name, errors) {
+//   mail subject:getBuildFailedSubject(name), body:getBuildFailedBody(name, errors), to:defaultMailTo(), cc:CULPRITS_ADDRESSES, mimeType:'text/html'
+//   error "${name} FAILED"
+// }
+
+// def mailOnError(params) {
+//   def savedErrors = []
+//   try {
+//     if (params.scm) {
+//       // call the scm closure
+//       (params.scm)()
+//     } else {
+//       checkout scm
+//     }
+//     withEnv(EXTRA_ENV) {
+//       if (params.timeout) {
+//         timeout(params.timeout) {
+//           sh params.sh
+//         }
+//       } else {
+//         sh params.sh
+//       }
+//     }
+//   }
+//   catch (err) {
+//     savedErrors << err
+//   }
+//   finally {
+//     if (params.archive) {
+//       // archive step does not throw an exception
+//       archive params.archive
+//     }
+//     // junitResults does throw an exception
+//     try {
+//       if (params.junit) {
+//         step(params.junit)
+//       }
+//     }
+//     catch (err) {
+//       savedErrors << err
+//     }
+//     finally {
+//       if (savedErrors) {
+//         handleErrors(params.name, savedErrors)
+//       }
+//     }
+//   }
+// }
+
+return this

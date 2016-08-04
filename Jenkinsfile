@@ -9,6 +9,9 @@ stage name: 'TEST', concurrency: 1
 node('master') {
   checkout scm
 
+  def lib = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
+  step lib.allowClaim()
+
 //   def lsb = Jenkins.instance.getItem('newton').getItem(env.BRANCH_NAME).lastSuccessfulBuild
   def lsb = Jenkins.instance.getItem('newton-osx').getItem(env.BRANCH_NAME).lastSuccessfulBuild
   def lsbNumber = lsb.number.toString()
