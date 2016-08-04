@@ -4,12 +4,12 @@
 binding.setVariable('ALLOW_CLAIM', [$class: 'ClaimPublisher'])
 currentBuild.rawBuild.project.description = description()
 
+def lib = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
 stage name: 'TEST', concurrency: 1
 //node('osx-bigmac-slave') {
 node('master') {
   checkout scm
 
-  def lib = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
   step lib.allowClaim()
 
 //   def lsb = Jenkins.instance.getItem('newton').getItem(env.BRANCH_NAME).lastSuccessfulBuild
