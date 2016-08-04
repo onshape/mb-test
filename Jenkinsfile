@@ -4,7 +4,7 @@
 binding.setVariable('ALLOW_CLAIM', [$class: 'ClaimPublisher'])
 currentBuild.rawBuild.project.description = description()
 
-stage 'TEST', concurrency: 1
+stage name: 'TEST', concurrency: 1
 node('osx-bigmac-slave') {
   checkout scm
 
