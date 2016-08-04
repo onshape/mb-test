@@ -14,11 +14,10 @@ node('master') {
   def lsbNumber = lsb.number.toString()
   binding.setVariable('LSB_NUMBER', lsbNumber)
 
-  def gitData = lsb.getAction(hudson.plugins.git.util.BuildData)
-  def lsbSha = gitData.lastBuiltRevision.sha1String
+  def lsbSha = getBuildSha(lsb)
   binding.setVariable('LSB_SHA', lsbSha)
 
-  currentBuild.rawBuild.description = "newton-master build ${lsbNumber} ${lsbSha}"
+  currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${lsbNumber} ${lsbSha}"
   def mustRun = true
   for (b in currentBuild.rawBuild.project.builds) {
     if ((getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
@@ -33,7 +32,6 @@ node('master') {
 
 def getBuildSha(b) {
   def sha = b.getAction(jenkins.scm.api.SCMRevisionAction).revision.hash
-  echo sha
   return sha
 }
 // archive 
@@ -55,7 +53,7 @@ at that version
 """
 }
 
-def bashCmd() {
+def bashCommand() {
   """# We need tell gradle which BUILD_NUMBER and GIT_BRANCH to use.
 export BUILD_NUMBER=${LSB_NUMBER}
 export GIT_BRANCH=${env.BRANCH_NAME}
