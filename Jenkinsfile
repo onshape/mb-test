@@ -9,7 +9,7 @@ stage name: 'TEST', concurrency: 1
 node('master') {
   checkout scm
 
-  def lsb = currentBuild.rawBuild.project.lastSuccessfulBuild
+  def lsb = Jenkins.instance.getItem('newton').getItem(env.BRANCH_NAME).lastSuccessfulBuild
   def lsbNumber = lsb.number.toString()
   binding.setVariable('LSB_NUMBER', lsbNumber)
 
