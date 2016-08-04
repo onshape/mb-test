@@ -15,7 +15,6 @@ node('master') {
   binding.setVariable('LSB_NUMBER', lsbNumber)
 
   def lsbSha = getBuildSha(lsb)
-  binding.setVariable('LSB_SHA', lsbSha)
 
   currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${lsbNumber} ${lsbSha}"
   def mustRun = true
@@ -30,6 +29,7 @@ node('master') {
   }
 }
 
+@NonCps
 def getBuildSha(b) {
   def sha = b.getAction(jenkins.scm.api.SCMRevisionAction).revision.hash
   return sha
