@@ -2,7 +2,6 @@
 
 // Global variables
 def LIB
-def LSB_NUMBER
 
 currentBuild.rawBuild.project.description = description()
 
@@ -15,7 +14,8 @@ node('master') {
   step LIB.allowClaim()
 
   def lsb = LIB.getBranchLsb(env.BRANCH_NAME)
-  LSB_NUMBER = lsb.number.toString()
+  // Global variable does not work inside string interpolation, use binding instead.
+  binding.setVariable('LSB_NUMBER'), lsb.number.toString())
 
   def lsbSha = LIB.getBuildSha(lsb)
   lsb = null
