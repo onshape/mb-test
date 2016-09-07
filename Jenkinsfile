@@ -8,6 +8,12 @@ currentBuild.rawBuild.project.description = description()
 stage name: 'TEST', concurrency: 1
 //node('osx-bigmac-slave') {
 node('master') {
+    echo onshape.estimatedDuration as String
+    echo onshape.onshapeCulpritAddresses.join(',')
+    echo onshape.otherCulpritAddresses.join(',')
+}
+
+node('master') {
   checkout scm
 
   LIB = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
@@ -24,6 +30,8 @@ node('master') {
   currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${LSB_NUMBER} ${lsbSha}"
   def mustRun = true
   for (b in currentBuild.rawBuild.project.builds) {
+    // this is wrong, we don't care about out sha, we care about the lsb sha of that build
+    // Jenkins.instance.getItem('promote-to-s3').getItem('pkania-pipeline').builds[0].getAction(hudson.model.ParametersAction).getParameter('BUILD_NUMBER').value
     if ((LIB.getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
       currentBuild.rawBuild.description += ' already passed'
       mustRun = false
