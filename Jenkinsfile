@@ -11,7 +11,7 @@ node('master') {
     echo onshape.estimatedDuration as String
     echo onshape.onshapeCulpritAddresses.join(',')
     echo onshape.otherCulpritAddresses.join(',')
-    echo onshape.lsbCommits.join(',')
+    echo onshape.lsbCommit
 }
 
 // node('master') {
