@@ -11,36 +11,37 @@ node('master') {
     echo onshape.estimatedDuration as String
     echo onshape.onshapeCulpritAddresses.join(',')
     echo onshape.otherCulpritAddresses.join(',')
+    echo onshape.lsbCommits.join(',')
 }
 
-node('master') {
-  checkout scm
+// node('master') {
+//   checkout scm
 
-  LIB = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
-  step LIB.allowClaim()
+//   LIB = load 'buildSrc/jenkins/pipeline/lib.jenkinsfile'
+//   step LIB.allowClaim()
 
-  def lsb = LIB.getBranchLsb(env.BRANCH_NAME)
-  // Global variable does not work inside string interpolation, use binding instead.
-  binding.setVariable('LSB_NUMBER', lsb.number.toString())
+//   def lsb = LIB.getBranchLsb(env.BRANCH_NAME)
+//   // Global variable does not work inside string interpolation, use binding instead.
+//   binding.setVariable('LSB_NUMBER', lsb.number.toString())
 
-  def lsbSha = LIB.getBuildSha(lsb)
-  // to avoid serialization error
-  lsb = null
+//   def lsbSha = LIB.getBuildSha(lsb)
+//   // to avoid serialization error
+//   lsb = null
 
-  currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${LSB_NUMBER} ${lsbSha}"
-  def mustRun = true
-  for (b in currentBuild.rawBuild.project.builds) {
-    // this is wrong, we don't care about out sha, we care about the lsb sha of that build
-    // Jenkins.instance.getItem('promote-to-s3').getItem('pkania-pipeline').builds[0].getAction(hudson.model.ParametersAction).getParameter('BUILD_NUMBER').value
-    if ((LIB.getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
-      currentBuild.rawBuild.description += ' already passed'
-      mustRun = false
-    }
-  }
-  if (mustRun) {
-    LIB.mailOnError name: 'long-upgraded-retrieval-test', sh: bashCommand(), archive: [includes: '**/*.log,stage/fileretrieval/**/*'], junit: LIB.junitResults('stage/**/test-results/*.xml')
-  }
-}
+//   currentBuild.rawBuild.description = "newton ${env.BRANCH_NAME} build ${LSB_NUMBER} ${lsbSha}"
+//   def mustRun = true
+//   for (b in currentBuild.rawBuild.project.builds) {
+//     // this is wrong, we don't care about out sha, we care about the lsb sha of that build
+//     // Jenkins.instance.getItem('promote-to-s3').getItem('pkania-pipeline').builds[0].getAction(hudson.model.ParametersAction).getParameter('BUILD_NUMBER').value
+//     if ((LIB.getBuildSha(b) == lsbSha) && (b.result == hudson.model.Result.SUCCESS)) {
+//       currentBuild.rawBuild.description += ' already passed'
+//       mustRun = false
+//     }
+//   }
+//   if (mustRun) {
+//     LIB.mailOnError name: 'long-upgraded-retrieval-test', sh: bashCommand(), archive: [includes: '**/*.log,stage/fileretrieval/**/*'], junit: LIB.junitResults('stage/**/test-results/*.xml')
+//   }
+// }
 
 def description() {
   """
