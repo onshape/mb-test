@@ -9,6 +9,7 @@ stage name: 'TEST', concurrency: 1
 //node('osx-bigmac-slave') {
 node('master') {
     echo onshape.estimatedDuration as String
+    echo groovy.json.JsonOutput.toJson(onshape.culprits)
     echo onshape.onshapeCulpritAddresses.join(',')
     echo onshape.otherCulpritAddresses.join(',')
     echo onshape.lsbCommit
