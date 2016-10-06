@@ -13,6 +13,7 @@ node('master') {
     echo onshape.onshapeCulpritAddresses.join(',')
     echo onshape.otherCulpritAddresses.join(',')
     echo onshape.lsbCommit
+    currentBuild.rawBuild.project.concurrentBuild = false
 }
 
 // node('master') {
