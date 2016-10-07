@@ -5,7 +5,22 @@ def LIB
 
 currentBuild.rawBuild.project.description = description()
 
-stage name: 'TEST', concurrency: 1
+stage name: 'TEST'
+//node('osx-bigmac-slave') {
+node('master') {
+    echo onshape.estimatedDuration as String
+    echo groovy.json.JsonOutput.toJson(onshape.culprits)
+    echo onshape.onshapeCulpritAddresses.join(',')
+    echo onshape.otherCulpritAddresses.join(',')
+    echo onshape.lsbCommit
+    properties [[$class: 'DisableConcurrentBuildsJobProperty']]
+    sh 'sleep 180'
+    echo 'done'
+    echo 'done'
+    echo 'done'
+}
+
+stage name: 'TEST2'
 //node('osx-bigmac-slave') {
 node('master') {
     echo onshape.estimatedDuration as String
