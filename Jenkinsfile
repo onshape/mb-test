@@ -16,6 +16,7 @@ node('master') {
     properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     sh 'sleep 180'
     echo 'done'
+    echo 'done'
 }
 
 // node('master') {
