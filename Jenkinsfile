@@ -17,7 +17,6 @@ node('master') {
     sh 'sleep 180'
     echo 'done'
     echo 'done'
-    echo 'done'
 }
 
 stage name: 'TEST2'
