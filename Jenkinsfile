@@ -15,7 +15,6 @@ node('master') {
     echo onshape.lsbCommit
     properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     sh 'sleep 180'
-    echo 'done'
 }
 
 stage name: 'TEST2'
