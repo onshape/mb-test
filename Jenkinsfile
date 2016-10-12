@@ -15,7 +15,7 @@ node('master') {
     echo onshape.lsbCommit
     // properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     currentBuild.rawBuild.project.concurrentBuild = false
-    sh 'sleep 30'
+    sh 'sleep 180'
     echo 'done'
     echo 'done'
 }
