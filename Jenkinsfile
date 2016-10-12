@@ -17,6 +17,7 @@ node('master') {
     currentBuild.rawBuild.project.concurrentBuild = false
     sh 'sleep 30'
     echo 'done'
+    echo 'done'
 }
 
 // stage name: 'TEST2'
