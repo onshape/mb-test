@@ -16,7 +16,6 @@ node('master') {
     properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     sh 'sleep 18'
     echo 'done'
-    echo 'done'
 }
 
 // stage name: 'TEST2'
