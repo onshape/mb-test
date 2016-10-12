@@ -14,7 +14,7 @@ node('master') {
     echo onshape.otherCulpritAddresses.join(',')
     echo onshape.lsbCommit
     properties [[$class: 'DisableConcurrentBuildsJobProperty']]
-    currentBuild.parent.concurrentBuild = false
+    currentBuild.rawBuild.project.concurrentBuild = false
     sh 'sleep 3'
     echo 'done'
 }
