@@ -14,7 +14,7 @@ node('master') {
     echo onshape.otherCulpritAddresses.join(',')
     echo onshape.lsbCommit
     properties [[$class: 'DisableConcurrentBuildsJobProperty']]
-    sh 'sleep 180'
+    sh 'sleep 18'
     echo 'done'
     echo 'done'
     echo 'done'
@@ -22,20 +22,20 @@ node('master') {
     echo 'done'
 }
 
-stage name: 'TEST2'
-//node('osx-bigmac-slave') {
-node('master') {
-    echo onshape.estimatedDuration as String
-    echo groovy.json.JsonOutput.toJson(onshape.culprits)
-    echo onshape.onshapeCulpritAddresses.join(',')
-    echo onshape.otherCulpritAddresses.join(',')
-    echo onshape.lsbCommit
-    properties [[$class: 'DisableConcurrentBuildsJobProperty']]
-    sh 'sleep 180'
-    echo 'done'
-    echo 'done'
-    echo 'done'
-}
+// stage name: 'TEST2'
+// //node('osx-bigmac-slave') {
+// node('master') {
+//     echo onshape.estimatedDuration as String
+//     echo groovy.json.JsonOutput.toJson(onshape.culprits)
+//     echo onshape.onshapeCulpritAddresses.join(',')
+//     echo onshape.otherCulpritAddresses.join(',')
+//     echo onshape.lsbCommit
+//     properties [[$class: 'DisableConcurrentBuildsJobProperty']]
+//     sh 'sleep 180'
+//     echo 'done'
+//     echo 'done'
+//     echo 'done'
+// }
 
 // node('master') {
 //   checkout scm
