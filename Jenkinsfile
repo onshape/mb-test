@@ -19,6 +19,7 @@ node('master') {
     echo 'done'
     echo 'done'
     echo 'done'
+    echo 'done'
 }
 
 // stage name: 'TEST2'
