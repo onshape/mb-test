@@ -1,6 +1,7 @@
 #!groovy
 
 import hudson.model.Cause
+//import groovy.xml.XmlUtil
 
 // Global variables
 def LIB
@@ -16,13 +17,14 @@ node('master') {
     echo onshape.otherCulpritAddresses.join(',')
     echo onshape.lsbCommit
     // properties [[$class: 'DisableConcurrentBuildsJobProperty']]
-    currentBuild.rawBuild.project.concurrentBuild = false
-    if (currentBuild.number == 81) {
-      def nextBuildNumber = Jenkins.instance.getItem('mb-test-1').getItem('master').nextBuildNumber + 80
-      currentBuild.rawBuild.project.nextBuildNumber = nextBuildNumber
-      currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
-      error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
-    }
+    // currentBuild.rawBuild.project.concurrentBuild = false
+    // if (currentBuild.number == 81) {
+    //   def nextBuildNumber = Jenkins.instance.getItem('mb-test-1').getItem('master').nextBuildNumber + 80
+    //   currentBuild.rawBuild.project.nextBuildNumber = nextBuildNumber
+    //   currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
+    //   error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
+    // }
+    echo XmlUtil.escapeXml('<head>tail</head>')
     sh 'sleep 10'
 }
 
