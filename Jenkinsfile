@@ -1,7 +1,6 @@
 #!groovy
 
 import hudson.model.Cause
-import groovy.text.SimpleTemplateEngine
 
 // Global variables
 def LIB
@@ -35,17 +34,23 @@ def escapeHtml(s) {
 def getReport() {
   def engine = new SimpleTemplateEngine()
 
-  def template = '<% changeSets.each { change -> println "commit/${escapeHtml(change)}/" } %>'
+  // def template = '<% changeSets.each { change -> println "commit/${escapeHtml(change)}/" } %>'
   // def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change}\'></td></tr>" } %>'
   // return escapeHtml('<a>')
   // copy of function, because of scope problems
   // def escapeHtml = { s->
   //   s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
   // }
-  def report = engine.createTemplate(template).make([changeSets:['a', 'b', 'c'], escapeHtml:{ s ->
-    return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
-  }]).toString()
-  return report
+  // def report = engine.createTemplate(template).make([changeSets:['a', 'b', 'c'], escapeHtml:{ s ->
+  //   return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
+  // }]).toString()
+  // return report
+  def changeSets = ['<', '>', '"', '\'']
+  def body = ''
+  for (change in changeSets) {
+    body += "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change}\'></td></tr>"
+  }
+  return body
 }
 // stage name: 'TEST2'
 // //node('osx-bigmac-slave') {
