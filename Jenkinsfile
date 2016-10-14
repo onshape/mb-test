@@ -17,10 +17,11 @@ node('master') {
     echo onshape.lsbCommit
     // properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     currentBuild.rawBuild.project.concurrentBuild = false
-    if (currentBuild.number == 70) {
-      currentBuild.rawBuild.project.nextBuildNumber = Jenkins.instance.getItem('mb-test-1').getItem('master').nextBuildNumber + 70
+    if (currentBuild.number == 75) {
+      def nextBuildNumber = Jenkins.instance.getItem('mb-test-1').getItem('master').nextBuildNumber + 75
+      currentBuild.rawBuild.project.nextBuildNumber = nextBuildNumber
       currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
-      error "build number on ${env.BRANCH_NAME} is 1, updated"
+      error "build number for ${env.BRANCH_NAME} is 1, updated to ${nextBuildNumber} and restarting"
     }
     sh 'sleep 10'
 }
