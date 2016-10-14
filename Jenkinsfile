@@ -1,12 +1,7 @@
 #!groovy
 
-@Grab(group='org.apache.commons', module='commons-lang3', version='3.3.2')
-// @Grapes(
-//   @Grab(group='org.apache.commons', module='commons-lang3', version='3.4')
-// )
-
 import hudson.model.Cause
-import org.apache.commons.lang.StringEscapeUtils
+import groovy.text.SimpleTemplateEngine
 
 // Global variables
 def LIB
@@ -29,10 +24,21 @@ node('master') {
     //   currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
     //   error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
     // }
-    echo StringEscapeUtils.escapeHtml4('<1> & \'2')
+    echo getReport()
     sh 'sleep 10'
 }
 
+def escapeHtml(s) {
+  return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
+}
+
+def getReport() {
+  def engine = new SimpleTemplateEngine()
+
+  def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
+  def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"]], escapeHtml:escapeHtml).toString()
+  return report
+}
 // stage name: 'TEST2'
 // //node('osx-bigmac-slave') {
 // node('master') {
