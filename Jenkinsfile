@@ -8,6 +8,10 @@ def LIB
 
 currentBuild.rawBuild.project.description = description()
 
+def escapeHtml = { s->
+  return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
+}
+
 stage name: 'TEST'
 //node('osx-bigmac-slave') {
 node('master') {
@@ -24,15 +28,11 @@ node('master') {
     //   currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
     //   error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
     // }
-    echo getReport()
+    echo getReport(escapeHtml)
     sh 'sleep 10'
 }
 
-def escapeHtml() {
-  return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
-}
-
-def getReport() {
+def getReport(escapeHtml) {
   def engine = new SimpleTemplateEngine()
 
   // def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
