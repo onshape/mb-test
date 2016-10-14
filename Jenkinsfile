@@ -28,11 +28,11 @@ node('master') {
     //   currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
     //   error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
     // }
-    echo getReport(escapeHtml)
+    echo getReport()
     sh 'sleep 10'
 }
 
-def getReport(escapeHtml) {
+def getReport() {
   def engine = new SimpleTemplateEngine()
 
   // def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
