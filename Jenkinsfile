@@ -28,14 +28,16 @@ node('master') {
     sh 'sleep 10'
 }
 
-escapeHtml = { s ->
+def escapeHtml() {
   return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
 }
 
-def getReport(escapeHtml) {
+def getReport() {
   def engine = new SimpleTemplateEngine()
 
-  def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
+  // def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
+  def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change}\'></td></tr>" } %>'
+  echo escapeHtml('a')
   def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:escapeHtml]).toString()
   return report
 }
