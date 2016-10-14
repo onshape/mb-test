@@ -28,7 +28,7 @@ node('master') {
     sh 'sleep 10'
 }
 
-def escapeHtml() {
+escapeHtml = { s ->
   return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
 }
 
