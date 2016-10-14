@@ -35,14 +35,14 @@ def escapeHtml(s) {
 def getReport() {
   def engine = new SimpleTemplateEngine()
 
-  def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
+  def template = '<% changeSets.each { change -> println "commit/${escapeHtml(change)}/" } %>'
   // def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change}\'></td></tr>" } %>'
   // return escapeHtml('<a>')
   // copy of function, because of scope problems
   // def escapeHtml = { s->
   //   s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
   // }
-  def report = engine.createTemplate(template).make([changeSets:['a', 'b', 'c'], escapeHtml:{ s->
+  def report = engine.createTemplate(template).make([changeSets:['a', 'b', 'c'], escapeHtml:{ s ->
     return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
   }]).toString()
   return report
