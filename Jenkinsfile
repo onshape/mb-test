@@ -28,9 +28,9 @@ node('master') {
     sh 'sleep 10'
 }
 
-WorkflowScript.metaClass.static.escapeHtml = { s ->
+binding.setVariable('escapeHtml', { s ->
   return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
-}
+                    })
 
 def getReport() {
   def engine = new SimpleTemplateEngine()
