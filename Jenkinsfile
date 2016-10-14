@@ -1,6 +1,6 @@
 #!groovy
 
-@Grab(group='org.apache.commons', module='commons-lang3', version='3.4')
+@Grab(group='org.apache.commons', module='commons-lang3', version='3.3.2')
 // @Grapes(
 //   @Grab(group='org.apache.commons', module='commons-lang3', version='3.4')
 // )
