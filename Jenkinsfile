@@ -1,5 +1,7 @@
 #!groovy
 
+import import hudson.model.Cause
+
 // Global variables
 def LIB
 
@@ -15,7 +17,7 @@ node('master') {
     echo onshape.lsbCommit
     // properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     currentBuild.rawBuild.project.concurrentBuild = false
-    if (currentBuild.number == 63) {
+    if (currentBuild.number == 64) {
       currentBuild.rawBuild.project.nextBuildNumber = Jenkins.instance.getItem('mb-test-1').getItem('master').nextBuildNumber + 70
       currentBuild.rawBuild.project.scheduleBuild(0. new Cause.UpstreamCause(currentBuild.rawBuild))
       error "build number on ${env.BRANCH_NAME} is 1, updated"
