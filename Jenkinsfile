@@ -28,7 +28,7 @@ node('master') {
     sh 'sleep 10'
 }
 
-def escapeHtml(s) {
+escapeHtml = { s ->
   return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
 }
 
@@ -37,10 +37,10 @@ def getReport() {
 
   // def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
   def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change}\'></td></tr>" } %>'
-  // return escapeHtml('<a>')
-  def e = escapeToHtml
-  def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:e]).toString()
-  return report
+  return escapeHtml('<a>')
+  // def e = escapeToHtml
+  // def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:e]).toString()
+  // return report
 }
 // stage name: 'TEST2'
 // //node('osx-bigmac-slave') {
