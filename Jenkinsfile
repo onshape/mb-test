@@ -42,7 +42,7 @@ def getReport() {
   // def escapeHtml = { s->
   //   s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
   // }
-  def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:{ s->
+  def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', 'a"b', "a'b"], escapeHtml:{ s->
     s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
   }]).toString()
   return report
