@@ -37,7 +37,7 @@ def getReport() {
 
   // def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
   def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change}\'></td></tr>" } %>'
-  return escapeHtml('<a>')
+  return escapeHtml.call('<a>')
   // def e = escapeToHtml
   // def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:e]).toString()
   // return report
