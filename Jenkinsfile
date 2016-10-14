@@ -46,7 +46,7 @@ def getReport() {
   def changeSets = ['<', '>', '"', '\'']
   def body = ''
   for (change in changeSets) {
-    body += "<tr><td><a href=\'https://github.com/onshape/newton/commit/${change}\'></td></tr>"
+    body += "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>"
   }
   return body
 }
