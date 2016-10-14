@@ -40,7 +40,7 @@ def getReport() {
   // return escapeHtml('<a>')
   // copy of function, because of scope problems
   def escapeHtml = { s->
-    return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
+    s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\'', '&#39;').replaceAll('"', '&quot;')
   }
   def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:escapeHtml]).toString()
   return report
