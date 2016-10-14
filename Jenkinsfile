@@ -1,7 +1,7 @@
 #!groovy
 
 import hudson.model.Cause
-//import groovy.xml.XmlUtil
+import groovy.xml.XmlUtil
 
 // Global variables
 def LIB
