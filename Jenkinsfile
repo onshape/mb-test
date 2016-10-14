@@ -24,7 +24,7 @@ node('master') {
     //   currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
     //   error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
     // }
-    echo XmlUtil.escapeXml('<head>tail</head>')
+    echo groovy.xml.XmlUtil.XmlUtil.escapeXml('<head>tail</head>')
     sh 'sleep 10'
 }
 
