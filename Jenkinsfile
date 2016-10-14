@@ -24,7 +24,7 @@ node('master') {
     //   currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
     //   error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
     // }
-    echo getReport()
+    echo getReport(escapeHtml)
     sh 'sleep 10'
 }
 
@@ -36,7 +36,7 @@ def getReport(escapeHtml) {
   def engine = new SimpleTemplateEngine()
 
   def template = '<% changeSets.each { change -> println "<tr><td><a href=\'https://github.com/onshape/newton/commit/${escapeHtml(change)}\'></td></tr>" } %>'
-  def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:this.&escapeHtml]).toString()
+  def report = engine.createTemplate(template).make([changeSets:['<a>&<b>', '"', "'"], escapeHtml:escapeHtml]).toString()
   return report
 }
 // stage name: 'TEST2'
