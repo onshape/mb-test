@@ -1,7 +1,11 @@
 #!groovy
 
+// @Grapes(
+//   @Grab(group='org.apache.commons', module='commons-lang3', version='3.4')
+// )
+
 import hudson.model.Cause
-import groovy.xml.XmlUtil
+import org.apache.commons.lang.StringEscapeUtils
 
 // Global variables
 def LIB
@@ -24,7 +28,7 @@ node('master') {
     //   currentBuild.rawBuild.project.scheduleBuild(0, new Cause.UpstreamCause(currentBuild.rawBuild))
     //   error "build number for ${env.BRANCH_NAME} is 1, updated nextBuildNumber to ${nextBuildNumber} and restarted"
     // }
-    echo groovy.xml.XmlUtil.XmlUtil.escapeXml('<head>tail</head>')
+    echo StringEscapeUtils.escapeHtml4('<1> & \'2')
     sh 'sleep 10'
 }
 
