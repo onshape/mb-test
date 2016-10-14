@@ -1,8 +1,8 @@
 #!groovy
 
-// @Grapes(
-//   @Grab(group='org.apache.commons', module='commons-lang3', version='3.4')
-// )
+@Grapes(
+  @Grab(group='org.apache.commons', module='commons-lang3', version='3.4')
+)
 
 import hudson.model.Cause
 import org.apache.commons.lang.StringEscapeUtils
