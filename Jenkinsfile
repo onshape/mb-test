@@ -15,6 +15,9 @@ node('master') {
     echo onshape.onshapeCulpritAddresses.join(',')
     echo onshape.otherCulpritAddresses.join(',')
     echo onshape.lsbCommit
+    binding.setVariable('DEFAULT_TO', 'pkania@onshape.com')
+    echo onshape.defaultMailTo
+    
     // properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     // currentBuild.rawBuild.project.concurrentBuild = false
     // if (currentBuild.number == 81) {
