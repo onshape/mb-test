@@ -16,7 +16,8 @@ node('master') {
     echo onshape.otherCulpritAddresses.join(',')
     echo onshape.lsbCommit
     binding.setVariable('DEFAULT_TO', 'pkania@onshape.com')
-    echo onshape.branchName
+    echo "branchName ${onshape.branchName}"
+    echo "folderName ${onshape.folderName}"
     
     // properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     // currentBuild.rawBuild.project.concurrentBuild = false
