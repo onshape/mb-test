@@ -18,6 +18,7 @@ node('master') {
     binding.setVariable('DEFAULT_TO', 'pkania@onshape.com')
     echo "branchName ${onshape.branchName}"
     echo "folderName ${onshape.folderName}"
+    echo "repoName ${onshape.repoName}"
     
     // properties [[$class: 'DisableConcurrentBuildsJobProperty']]
     // currentBuild.rawBuild.project.concurrentBuild = false
