@@ -16,6 +16,7 @@ node('master') {
     echo groovy.json.JsonOutput.toJson(onshape.culprits)
     echo onshape.onshapeCulpritAddresses.join(',')
     echo onshape.otherCulpritAddresses.join(',')
+    echo 'pk@me.com pk2@me.com abc@amcbridge.com  abc@amcbridge.com.au'.tokenize().findAll({ !it.contains('amcbridge.com') }).join(',')
     echo onshape.lsbCommit
     binding.setVariable('DEFAULT_TO', 'pkania@onshape.com')
     echo "branchName ${onshape.branchName}"
