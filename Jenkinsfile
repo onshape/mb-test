@@ -7,6 +7,8 @@ def LIB
 
 currentBuild.rawBuild.project.description = description()
 
+binding.setVariable('ONSHAPE_REPO_NAME', 'mb-test')
+
 stage name: 'TEST'
 //node('osx-bigmac-slave') {
 node('master') {
