@@ -17,8 +17,9 @@ node('master') {
     echo onshape.onshapeCulpritAddresses.join(',')
     echo onshape.otherCulpritAddresses.join(',')
     def l1 = 'pk@me.com pk2@me.com abc@amcbridge.com  abc@amcbridge.com.au'.tokenize()
+    echo l1.toString()
     def f1 = l1.findAll { !it.contains('amcbridge.com') }
-    ecgi f1.toString()
+    echo f1.toString()
     echo f1.join(',')
     echo onshape.lsbCommit
     binding.setVariable('DEFAULT_TO', 'pkania@onshape.com')
