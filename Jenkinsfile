@@ -18,7 +18,12 @@ node('master') {
     echo onshape.otherCulpritAddresses.join(',')
     def l1 = 'pk@me.com pk2@me.com abc@amcbridge.com  abc@amcbridge.com.au'.tokenize()
     echo l1.toString()
-    def f1 = l1.findAll { !it.contains('amcbridge.com') }
+    def f1 = []
+    for (a in l1) {
+      if (!a.contains('amcbridge.com')) {
+        f1 << a
+      }
+    }
     echo f1.toString()
     echo f1.join(',')
     echo onshape.lsbCommit
