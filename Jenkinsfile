@@ -9,7 +9,7 @@ node('master') {
   echo env.BRANCH_NAME
   binding.setVariable('EXTRA_ENV', [])
 
-  wrapBuild sh:'false'
+  wrapBuild name: 'test', sh:'false'
 }
 
 def wrapBuild(params) {
