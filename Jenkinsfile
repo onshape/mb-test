@@ -19,7 +19,8 @@ def wrapBuild(params) {
       // call the scm closure
       (params.scm)()
     } else {
-      git branch: onshape.branchName, url: "git@github.com:onshape/${onshape.folderName}.git"
+      checkout scm
+      //git branch: onshape.branchName, url: "git@github.com:onshape/${onshape.folderName}.git"
     }
     withEnv(EXTRA_ENV) {
       if (params.timeout) {
